@@ -8,3 +8,16 @@ spec:
           networkVisibility: Public
           context: /
           schemaFilePath: openapi.yaml
+    outbound:
+        serviceReferences:
+            - name: choreo:///chamodabey/testproject/auth-service/c5d5a/v1/PUBLIC
+              connectionConfig: 01ef70f4-0893-1a6e-8dd2-eb77c261db99
+              env:
+                - from: ServiceURL
+                  to: SERVICE_URL
+                - from: ConsumerKey
+                  to: CONSUMER_KEY
+                - from: ConsumerSecret
+                  to: CONSUMER_SECRET
+                - from: TokenURL
+                  to: TOKEN_URL
