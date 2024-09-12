@@ -1,14 +1,30 @@
 import express from "express";
 import axios from "axios";
+import oauth from 'axios-oauth-client'
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const app = express();
 const port = 8080;
+const serviceURL = process.env.SERVICE_URL;
+const consumerKey = process.env.CONSUMER_KEY;
+const consumerSecret = process.env.CONSUMER_SECRET;
+const tokenUrl = process.env.TOKEN_URL;
+
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// consumerKey, consumerSecret and tokenUrl represent variables to which respective environment variables were read
+const getClientCredentials = oauth.clientCredentials(
+  axios.create(),
+  tokenUrl,
+  consumerKey,
+  consumerSecret
+);
+
+
 
 interface Todo {
   id: string;
@@ -20,7 +36,15 @@ const todoList: Todo[] = [];
 
 app.use(async (req, res, next) => {
   try {
-    await axios.get("http://localhost:8081", { timeout: 10000 });
+    const auth = await getClientCredentials(undefined);
+    const accessToken = auth.access_token;
+    await axios.get(serviceURL!, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      },
+      timeout: 10000
+    });
+    // await axios.get("http://localhost:8081", { timeout: 10000 });
     next();
   } catch {
     console.error("Failed to reach auth service");
