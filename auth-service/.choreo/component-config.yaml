@@ -1,0 +1,9 @@
+apiVersion: core.choreo.dev/v1beta1
+kind: ComponentConfig
+spec:
+    inbound:
+        - name: auth-service
+          port: 8081
+          type: REST
+          networkVisibility: Public
+          context: /
